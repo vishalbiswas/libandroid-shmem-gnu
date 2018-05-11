@@ -1,4 +1,3 @@
-#include <android/log.h>
 #include <errno.h>
 #include <pthread.h>
 #include <stdbool.h>
@@ -12,11 +11,20 @@
 #include <paths.h>
 
 #define __u32 uint32_t
+
+#ifdef __ANDROID__
 #include <linux/ashmem.h>
+#include <android/log.h>
+#define DBG(...) __android_log_print(ANDROID_LOG_INFO, "shmem", __VA_ARGS__)
+#else
+#include <fcntl.h>
+#include "ashmem.h"
+#define DBG(...) 
+typedef __key_t key_t;
+#endif
 
 #include "shm.h"
 
-#define DBG(...) __android_log_print(ANDROID_LOG_INFO, "shmem", __VA_ARGS__)
 #define ASHV_KEY_SYMLINK_PATH _PATH_TMP "ashv_key_%d"
 #define ANDROID_SHMEM_SOCKNAME "/dev/shm/%08x"
 #define ROUND_UP(N, S) ((((N) + (S) - 1) / (S)) * (S))
