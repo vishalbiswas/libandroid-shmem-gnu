@@ -17,6 +17,8 @@
 #include <android/log.h>
 #define DBG(...) __android_log_print(ANDROID_LOG_INFO, "shmem", __VA_ARGS__)
 #else
+#include <string.h>
+#include <sys/ioctl.h>
 #include <fcntl.h>
 #include "ashmem.h"
 #define DBG(...) 
